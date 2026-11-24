@@ -228,6 +228,15 @@
   footer strong{color:#fff}
   footer .trust{margin-top:12px;font-size:.9rem;color:#b9c9dd}
   footer .trust a{color:#fff;text-decoration:underline}
+  footer .trust button{background:none;border:none;color:#fff;font:inherit;cursor:pointer;text-decoration:underline;padding:0}
+  .modal-overlay{position:fixed;inset:0;background:rgba(4,18,36,.66);display:flex;align-items:center;justify-content:center;padding:20px;z-index:200}
+  .modal-overlay[hidden]{display:none}
+  .modal-card{background:#fff;color:#333840;border-radius:16px;max-width:440px;width:100%;padding:26px 26px 22px;position:relative;box-shadow:0 18px 50px rgba(0,0,0,.35);text-align:left}
+  .modal-card h3{color:#0b2e59;font-size:1.25rem;margin-bottom:10px;padding-right:28px}
+  .modal-card p{font-size:.98rem;line-height:1.55;margin-bottom:12px}
+  .modal-card .modal-note{color:#5a636e;font-size:.85rem;margin-bottom:0}
+  .modal-link{display:inline-block;background:#0b2e59;color:#fff;text-decoration:none;font-weight:700;padding:11px 20px;border-radius:10px;margin:2px 0 12px}
+  .modal-close{position:absolute;top:10px;right:14px;background:none;border:none;font-size:1.6rem;line-height:1;color:#5a636e;cursor:pointer}
 
   /* Sticky mobile call bar */
   .mobile-bar{display:none}
@@ -490,7 +499,7 @@
 <footer>
   <div class="wrap">
     <p><strong>Lino's Services LLC</strong>, Kalamazoo, Michigan. We show up, we get it done, no excuses.</p>
-    <p class="trust">🔒 Secure site (HTTPS) &nbsp;·&nbsp; Domain verified with Google &nbsp;·&nbsp; <a href="privacy.html">Privacy Policy</a></p>
+    <p class="trust">🔒 <button type="button" class="trust-btn" data-popup="https">Secure site (HTTPS)</button> &nbsp;·&nbsp; <button type="button" class="trust-btn" data-popup="google">Verified by Google Safe Browsing</button> &nbsp;·&nbsp; <a href="privacy.html">Privacy Policy</a></p>
     <p style="margin-top:6px;">© 2026 Lino's Services LLC. All rights reserved.</p>
   </div>
 </footer>
@@ -615,6 +624,59 @@
   toTop.addEventListener('click', function () {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
+</script>
+
+
+<div class="modal-overlay" id="trustModal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="trustModalTitle">
+    <button class="modal-close" id="trustModalClose" aria-label="Close">&times;</button>
+    <h3 id="trustModalTitle"></h3>
+    <p id="trustModalText"></p>
+    <a class="modal-link" id="trustModalLink" href="#" target="_blank" rel="noopener"></a>
+    <p class="modal-note" id="trustModalNote"></p>
+  </div>
+</div>
+<script>
+  (function () {
+    var INFO = {
+      https: {
+        title: 'Secure site (HTTPS)',
+        text: 'Your connection to linos.services is encrypted, so anything you send through the quote form travels protected. The security certificate was issued for linos.services by Let\u2019s Encrypt, and your browser checks it on every visit.',
+        href: 'https://www.ssllabs.com/ssltest/analyze.html?d=linos.services',
+        link: 'See the live report at SSL Labs',
+        note: 'SSL Labs is an independent security checker. The report can take a minute to generate the first time.'
+      },
+      google: {
+        title: 'Verified by Google Safe Browsing',
+        text: 'Google Safe Browsing checks linos.services for malware, phishing and other harmful content. In Google\u2019s public report for this site, no unsafe content has been found.',
+        href: 'https://transparencyreport.google.com/safe-browsing/search?url=linos.services',
+        link: 'See Google\u2019s report',
+        note: 'The report opens on Google\u2019s Transparency Report site.'
+      }
+    };
+    var modal = document.getElementById('trustModal');
+    var title = document.getElementById('trustModalTitle');
+    var text = document.getElementById('trustModalText');
+    var link = document.getElementById('trustModalLink');
+    var note = document.getElementById('trustModalNote');
+    function openPopup(key) {
+      var info = INFO[key];
+      if (!info) return;
+      title.textContent = info.title;
+      text.textContent = info.text;
+      link.href = info.href;
+      link.textContent = info.link;
+      note.textContent = info.note;
+      modal.hidden = false;
+    }
+    function closePopup() { modal.hidden = true; }
+    document.querySelectorAll('.trust-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () { openPopup(btn.getAttribute('data-popup')); });
+    });
+    document.getElementById('trustModalClose').addEventListener('click', closePopup);
+    modal.addEventListener('click', function (e) { if (e.target === modal) closePopup(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePopup(); });
+  })();
 </script>
 
 </body>
