@@ -299,6 +299,14 @@
     .carousel{aspect-ratio:4/3}
   }
 </style>
+<!-- Google Analytics (GA4) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-E5VTP6P23R"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-E5VTP6P23R');
+</script>
 </head>
 <body>
 
@@ -681,5 +689,14 @@
   })();
 </script>
 
+<script>
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('a[href^="tel:"], a[href^="mailto:"], a[href*="wa.me"]');
+    if (!a || typeof gtag !== 'function') return;
+    var href = a.getAttribute('href');
+    var method = href.indexOf('tel:') === 0 ? 'call' : (href.indexOf('mailto:') === 0 ? 'email' : 'whatsapp');
+    gtag('event', 'contact_click', { method: method });
+  });
+</script>
 </body>
 </html>
